@@ -16,8 +16,7 @@ module Main where
 import Database.Persist
 import Database.Persist.Postgresql
 import Database.Persist.TH
-import Control.Monad.Trans.Resource (ResourceT, MonadUnliftIO, runResourceT)
-import Control.Monad.Logger (LoggingT, runStdoutLoggingT)
+import Control.Monad.Logger (runStdoutLoggingT)
 import Control.Monad (void)
 
 
@@ -29,15 +28,7 @@ Person
 |]
 
 main :: IO ()
-main = runSql "dbname=hacking" $ do
+main = runStdoutLoggingT $ withPostgresqlPool "dbname=hacking" 1 $ liftSqlPersistMPool $ do
   runMigration migrateAll
 
   void $ insert (Person "John Doe" Nothing)
-
-runSql
-  :: (MonadUnliftIO m)
-  => ConnectionString
-  -> SqlPersistT (LoggingT (ResourceT m)) a
-  -> m a
-runSql connstr =
-  runResourceT . runStdoutLoggingT .  withPostgresqlConn connstr . runSqlConn
