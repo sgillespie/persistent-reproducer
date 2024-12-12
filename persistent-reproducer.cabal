@@ -1,0 +1,24 @@
+cabal-version:      3.0
+name:               persistent-reproducer
+version:            0.1.0.0
+homepage:           https://github.com/sgillespie/persistent-reproducer
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Sean D Gillespie
+maintainer:         sean@mistersg.net
+category:           Database
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+
+common warnings
+    ghc-options: -Wall
+
+executable persistent-reproducer
+    import:           warnings
+    main-is:          Main.hs
+    build-depends:
+      base ^>=4.18.2.1,
+      persistent,
+      persistent-postgresql
+    hs-source-dirs:   app
+    default-language: Haskell2010
